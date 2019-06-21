@@ -2,11 +2,13 @@ import React from 'react';
 import { chats } from 'db';
 import moment from 'moment';
 
+import { ListItem, List } from '@material-ui/core';
+
 const ChatList: React.FC = () => (
   <div>
-    <ul>
+    <List>
       {chats.map(chat => (
-        <li key={chat.id}>
+        <ListItem key={chat.id} button>
           <img src={chat.picture} alt="Profile" />
           <div>{chat.name}</div>
           {chat.lastMessage && (
@@ -15,9 +17,9 @@ const ChatList: React.FC = () => (
               <div>{moment(chat.lastMessage.createdAt).format('HH:mm')}</div>
             </React.Fragment>
           )}
-        </li>
+        </ListItem>
       ))}
-    </ul>
+    </List>
   </div>
 );
 
