@@ -1,82 +1,36 @@
 import moment from 'moment';
 import styled from 'styled-components';
 import React, { useState, useMemo } from 'react';
-import { ListItem, List } from '@material-ui/core';
-
-/**
- * Styled components
- */
-const Container = styled.div`
-  height: calc(100% - 56px);
-  overflow-y: overlay;
-`;
-
-const StyledList = styled(List)`
-  padding: 0 !important;
-` as typeof List;
-
-const StyledListItem = styled(ListItem)`
-  height: 76px;
-  padding: 0 15px;
-  display: flex;
-` as typeof ListItem;
-
-const ChatPicture = styled.img`
-  height: 50px;
-  width: 50px;
-  object-fit: cover;
-  border-radius: 50%;
-`;
-
-const ChatInfo = styled.div`
-  width: calc(100% - 60px);
-  height: 46px;
-  padding: 15px 0;
-  margin-left: 10px;
-  border-bottom: 0.5px solid silver;
-  position: relative;
-`;
-
-const ChatName = styled.div`
-  margin-top: 5px;
-`;
-
-const MessageContent = styled.div`
-  color: gray;
-  font-size: 15px;
-  margin-top: 5px;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-`;
-
-const MessageDate = styled.div`
-  position: absolute;
-  color: gray;
-  top: 20px;
-  right: 0;
-  font-size: 13px;
-`;
+import {
+  Container,
+  StyledList,
+  StyledListItem,
+  ChatPicture,
+  ChatInfo,
+  ChatName,
+  MessageContent,
+  MessageDate,
+} from './styles';
 
 const getChatsQuery = `
-query {
-  chats{
-    id,
-    name,
-    picture,
-    lastMessage {
+  query {
+    chats {
       id,
-      content,
-      createdAt
+      name,
+      picture,
+      lastMessage {
+        id,
+        content,
+        createdAt
+      }
     }
-  }
-}
-`;
+  }`;
 
-const ChatList = () => {
+const ChatList: React.FC = () => {
   const [chats, setChats] = useState<any[]>([]);
 
   useMemo(async () => {
+    // Faz a request dea listagem de chats
     const body = await fetch(`${process.env.REACT_APP_SERVER_URL}/graphql`, {
       method: 'POST',
       headers: {
@@ -85,10 +39,12 @@ const ChatList = () => {
       body: JSON.stringify({ query: getChatsQuery }),
     });
 
+    // Salva os dados da request
     const {
-      data: {chats}
+      data: { chats },
     } = await body.json();
-    console.log(chats);
+    
+    // Atualiza state
     setChats(chats);
   }, []);
 
